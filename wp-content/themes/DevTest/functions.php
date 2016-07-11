@@ -29,24 +29,46 @@ add_action('wp_ajax_nopriv_my_action', 'my_action_callback'); //срабатывает дл€ 
 function my_action_callback()
 { 
 	 //ѕолучаем название категории
-	 $categogyName = $_POST['countryName'];
+	 $categoryName = $_POST['countryName'];
 	 global $post;
-	$args = array('category_name' => $categogyName );
+	$args = array('category_name' => $categoryName, 'order' => 'ASC' );
 	//ѕолучаем записи (посты, страницы, вложени€) из базы данных по указанной критерии. 
 	$myposts = get_posts( $args );
-	$category_id = get_cat_ID($categogyName);
-	
+	$category_id = get_cat_ID($categoryName); // ѕолучает ID категории по переданному названию.
+	$termchildren = get_term_children( $category_id, 'category' ); //ќбъедин€ет в массив и возвращает все дочерние разделы элемента таксономии (категории).
 	 //*********************************************
 	 
 	  $htmlBlock = '<div class="row">
 							<div class="col-md-10">
 								<div class="row">
 									<div class="col-md-3">
-										<h2>'.$categogyName.'</h2>
+										<h2>'.$categoryName.'</h2>
 									</div>
-									<div class="col-md-9">
-										<div class="row">
-											<div class="col-md-12"> <h4>'.wp_get_post_tags().'</h4></div>
+									<div class="col-md-9">';
+									//нужно вывести подкатегории (дочерние) категории 10:
+									$categories=  get_categories('child_of='.$category_id);
+									if ($categories){
+										foreach ($categories as $category) {
+											$args = array('category_name' => $category->cat_name, 'order' => 'ASC' );
+											$myposts = get_posts( $args );
+											$htmlBlock .='<div class="row">
+											<div class="col-md-12"> <h4>'. $category->cat_name.'</h4></div>
+											</div>
+											<div class="row">';
+												foreach( $myposts as $post ){ setup_postdata($post);
+												$htmlBlock .= '<div id="one" class="col-md-4">
+													<h4>'.get_the_title().'</h4>';
+													$htmlBlock .= '<p>';
+													$htmlBlock .= get_the_content();//the_content();
+													$htmlBlock .= '</p>';
+												$htmlBlock .= '</div>';
+												}
+											$htmlBlock .= '</div>';
+										}
+									}
+									else{
+										$htmlBlock .= '<div class="row">
+											<div class="col-md-12"> <h4></h4></div>
 										</div>
 										<div class="row">';
 											foreach( $myposts as $post ){ setup_postdata($post);
@@ -57,9 +79,9 @@ function my_action_callback()
 												$htmlBlock .= '</p>';
 											$htmlBlock .= '</div>';
 											}
-										$htmlBlock .= '</div>		
-									</div>
-								</div>		
+										$htmlBlock .= '</div>';
+									}
+								$htmlBlock .= '</div>		
 							</div>
 							<div class="col-md-2"></div>
 						</div>';

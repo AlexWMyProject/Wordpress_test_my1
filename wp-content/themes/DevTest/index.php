@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <p>Find the Store near you:</p>
-                    <?php wp_dropdown_categories()?>
+                    <?php $args = array('child_of' => 0,'exclude'=>'1,9,10'); wp_dropdown_categories($args)?>
                 </div>
                 <div class="col-md-10 content">
                     <div class="row">
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div class="row">
-                                        <div class="col-md-12"> <h4>NY</h4></div>
+                                        <div class="col-md-12"> <h4>NYC</h4></div>
                                     </div>
                                     <div class="row">
                                         <div id="one" class="col-md-4">
