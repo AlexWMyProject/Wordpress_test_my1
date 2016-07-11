@@ -1,0 +1,26 @@
+/*
+Theme Name: DevTest
+Description: Themes special for AVEDsoft.
+Author: Vityuk Aleksandr
+Author URI: http://wordpress.net:801
+*/
+html { 
+    /*overflow:hidden;*/
+    /*overflow-y:hidden;  /*для вертикального*/
+    overflow-x:hidden;  /*для горизонтального*/  
+}
+body{
+    background: #000000;
+}
+p {
+    color: white;
+}
+h2 {
+    color: white;
+}
+h4 {
+    color: white;
+}
+#one{
+     border-top: 4px solid white; /* Параметры границы */
+}
